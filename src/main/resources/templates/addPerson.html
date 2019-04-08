@@ -14,7 +14,7 @@
    would be @{/edit.html}
    -->
 
-<form th:action="@{/addPerson}"
+<form th:action="@{/person/add}"
       th:object="${personForm}" method="POST">
     First Name:
     <input type="text" th:field="*{firstName}" />

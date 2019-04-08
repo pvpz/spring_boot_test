@@ -2,23 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Welcome</title>
+    <title>Add Person</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
 </head>
 <body>
-<h1>Welcome</h1>
-<h2 th:utext="${message}">..!..</h2>
+<h1>Person:</h1>
 
 <!--
-
    In Thymeleaf the equivalent of
    JSP's ${pageContext.request.contextPath}/edit.html
    would be @{/edit.html}
-
    -->
 
-<a th:href="@{/persons}">Person List</a>
+<form th:action="@{/person/${personId}"
+      th:object="${personForm}" method="POST">
+    First Name:
+    <h1 th:utext="*{firstName}" />
+    <br/>
+    Last Name:
+    <h1 th:utext="*{lastName}" />
+    <br/>
+    <input type="submit" value="Create" />
+</form>
+
+<br/>
 
 </body>
-
 </html>
