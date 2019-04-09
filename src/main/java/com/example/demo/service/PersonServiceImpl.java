@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service("personService")
 public class PersonServiceImpl implements PersonService {
@@ -26,5 +27,17 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void remove(Person person) {
         personRepository.delete(person);
+    }
+
+    @Override
+    public Person get(long id) {
+        return personRepository.findAll().stream()
+                .filter(l -> l.getId() == id).findFirst()
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    @Override
+    public void save(Person person) {
+        personRepository.save(person);
     }
 }

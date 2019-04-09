@@ -36,4 +36,24 @@ public class Person {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Person withLastName(String lastName) {
+        this.lastName = lastName;
+        return this;
+    }
+
+    public Person withFirstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+
 }

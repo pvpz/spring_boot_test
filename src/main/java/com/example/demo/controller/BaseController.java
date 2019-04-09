@@ -32,17 +32,8 @@ public class BaseController {
         return "persons";
     }
 
-    @RequestMapping(value = { "/persons/add" }, method = RequestMethod.GET)
-    public String showAddPersonPage(Model model) {
-
-        PersonForm personForm = new PersonForm();
-        model.addAttribute("personForm", personForm);
-
-        return "addPerson";
-    }
-
-    @RequestMapping(value = { "/persons/add" }, method = RequestMethod.POST)
-    public String savePerson(Model model, //
+    @RequestMapping(value = { "/persons/{id}" }, method = RequestMethod.POST)
+    public String savePerson(Model model, @PathVariable("id") int id,
                              @ModelAttribute("personForm") PersonForm personForm) {
 
         String firstName = personForm.getFirstName();
@@ -50,32 +41,37 @@ public class BaseController {
 
         if (firstName != null && firstName.length() > 0 //
                 && lastName != null && lastName.length() > 0) {
-            Person newPerson = new Person(firstName, lastName);
-            personService.add(newPerson);
+            if (id == 0) {
+                personService.add(new Person(firstName, lastName));
+            }else if (id > 0){
+                personService.save(personService.get(id).withFirstName(firstName).withLastName(lastName));
+            }
 
             return "redirect:/persons";
         }
 
         model.addAttribute("errorMessage", errorMessage);
-        return "addPerson";
+        return "person";
     }
 
-    @RequestMapping(value = { "/persons/{personId}" }, method = RequestMethod.GET)
-    public String open(Model model, @PathVariable("personId") int personId,
-                             @ModelAttribute("personForm") PersonForm personForm) {
-
-        String firstName = personForm.getFirstName();
-        String lastName = personForm.getLastName();
-
-        if (firstName != null && firstName.length() > 0 //
-                && lastName != null && lastName.length() > 0) {
-            Person newPerson = new Person(firstName, lastName);
-            personService.add(newPerson);
-
-            return "redirect:/person";
+    @RequestMapping(value = { "/persons/{id}" }, method = RequestMethod.GET)
+    public String open(Model model, @PathVariable("id") int id) {
+        try {
+            Person person;
+            if (id != 0) {
+                person = personService.get(id);
+            }else{
+                person = new Person();
+            }
+            PersonForm personForm = new PersonForm();
+            personForm.setFirstName(person.getFirstName());
+            personForm.setLastName(person.getLastName());
+            personForm.setId(person.getId());
+            model.addAttribute("personForm", personForm);
+        }catch(Exception e){
+            model.addAttribute("errorMessage", errorMessage);
         }
-
-        model.addAttribute("errorMessage", errorMessage);
-        return "addPerson";
+        return "person";
     }
+
 }

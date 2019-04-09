@@ -7,17 +7,19 @@
 </head>
 <body>
 <h1>Person List</h1>
-<a href="person/add">Add Person</a>
+<a th:href="@{/persons/0}">Add Person</a>
 <br/><br/>
 <div>
     <table border="1">
         <tr>
+            <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
         </tr>
         <tr th:each ="person : ${persons}">
-            <td th:utext="${person.firstName}">...</td>
-            <td th:utext="${person.lastName}">...</td>
+            <td> <a th:href="@{/persons/{id}(id=${person.id})}"th:utext="${person.id}"></a></td>
+            <td th:utext="${person.firstName}"></td>
+            <td th:utext="${person.lastName}"></td>
         </tr>
     </table>
 </div>

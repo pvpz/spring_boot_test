@@ -11,4 +11,8 @@ public interface PersonService {
     public void add(Person person);
 
     public void remove(Person person);
+
+    public Person get(long id);
+
+    public void save(Person person);
 }
