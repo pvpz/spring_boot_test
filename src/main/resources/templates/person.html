@@ -27,6 +27,10 @@
     <br/>
     <input type="submit" value="Save" />
 </form>
+<form th:action="@{/persons/{id}(id=${id})}"
+      th:object="${personForm}" th:method="delete">
+    <input type="submit" value="Delete" />
+</form>
 
 <br/>
 <!-- Check if errorMessage is not null and not empty -->

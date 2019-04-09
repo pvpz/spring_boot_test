@@ -74,4 +74,22 @@ public class BaseController {
         return "person";
     }
 
+    @RequestMapping(value = { "/persons/{id}" }, method = RequestMethod.DELETE)
+    public String delete(Model model, @PathVariable("id") int id){
+        String error = "";
+        try {
+            if (id > 0) {
+                personService.delete(personService.get(id));
+                return "redirect:/persons";
+            } else {
+                error = "No person with this id " + id;
+            }
+        }catch (Exception e){
+            error = e.getMessage();
+        }
+
+        model.addAttribute("errorMessage", error);
+        return "person";
+    }
+
 }

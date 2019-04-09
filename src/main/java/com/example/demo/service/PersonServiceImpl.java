@@ -25,7 +25,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void remove(Person person) {
+    public void delete(Person person) {
         personRepository.delete(person);
     }
 
