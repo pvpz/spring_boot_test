@@ -4,6 +4,7 @@ public class PersonForm {
     private String firstName;
     private String lastName;
     private long id;
+    private int score;
 
     public String getFirstName() {
         return firstName;
@@ -27,5 +28,13 @@ public class PersonForm {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

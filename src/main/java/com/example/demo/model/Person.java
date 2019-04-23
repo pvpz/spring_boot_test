@@ -11,14 +11,16 @@ public class Person {
     private long id;
     private String firstName;
     private String lastName;
+    private int score;
 
     public Person() {
 
     }
 
-    public Person(String firstName, String lastName) {
+    public Person(String firstName, String lastName, int score) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.score = score;
     }
 
     public String getFirstName() {
@@ -55,5 +57,11 @@ public class Person {
         return this;
     }
 
+    public int getScore() {
+        return score;
+    }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
 }

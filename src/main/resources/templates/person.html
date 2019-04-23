@@ -25,6 +25,9 @@
     Last Name:
     <input type="text" th:field="*{lastName}" />
     <br/>
+    Score:
+    <input type="text" th:field="*{score}" />
+    <br/>
     <input type="submit" value="Save" />
 </form>
 <form th:action="@{/persons/{id}(id=${id})}"

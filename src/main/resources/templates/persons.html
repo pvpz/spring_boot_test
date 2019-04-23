@@ -15,13 +15,20 @@
             <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Score</th>
         </tr>
         <tr th:each ="person : ${persons}">
             <td> <a th:href="@{/persons/{id}(id=${person.id})}"th:utext="${person.id}"></a></td>
             <td th:utext="${person.firstName}"></td>
             <td th:utext="${person.lastName}"></td>
+            <td th:utext="${person.score}"></td>
         </tr>
     </table>
+    <form th:action="@{/persons/}"
+          th:object="${generatorForm}" th:method="POST">
+        <input type="text" th:field="*{count}"/>
+        <input type="submit" value="Generate persons" />
+    </form>
 </div>
 </body>
 </html>

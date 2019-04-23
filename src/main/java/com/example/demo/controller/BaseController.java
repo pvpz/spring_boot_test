@@ -1,21 +1,22 @@
 package com.example.demo.controller;
 
+import com.example.demo.form.GeneratorForm;
 import com.example.demo.form.PersonForm;
+import com.example.demo.logics.PersonGenerator;
 import com.example.demo.model.Person;
 import com.example.demo.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 
 @Controller
 public class BaseController {
 
+    @Autowired
+    private PersonGenerator personGenerator;
     @Autowired
     private PersonService personService;
 
@@ -29,7 +30,14 @@ public class BaseController {
     @RequestMapping(value = { "/persons" }, method = RequestMethod.GET)
     public String persons(Model model) {
         model.addAttribute("persons", personService.getAllPersons());
+        model.addAttribute("generatorForm",new GeneratorForm());
         return "persons";
+    }
+
+    @RequestMapping(value = { "/persons" }, method = RequestMethod.POST)
+    public String generatePersons(Model model,@ModelAttribute("generatorForm") GeneratorForm generatorForm) {
+        personGenerator.generate(generatorForm.getCount());
+        return "redirect:/persons";
     }
 
     @RequestMapping(value = { "/persons/{id}" }, method = RequestMethod.POST)
@@ -38,11 +46,12 @@ public class BaseController {
 
         String firstName = personForm.getFirstName();
         String lastName = personForm.getLastName();
+        int score = personForm.getScore();
 
         if (firstName != null && firstName.length() > 0 //
                 && lastName != null && lastName.length() > 0) {
             if (id == 0) {
-                personService.add(new Person(firstName, lastName));
+                personService.add(new Person(firstName, lastName, score));
             }else if (id > 0){
                 personService.save(personService.get(id).withFirstName(firstName).withLastName(lastName));
             }
