@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.form.DistributorForm;
 import com.example.demo.form.GeneratorForm;
 import com.example.demo.form.PersonForm;
+import com.example.demo.logics.Distributor;
 import com.example.demo.logics.PersonGenerator;
 import com.example.demo.model.Person;
 import com.example.demo.service.PersonService;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Controller
 public class BaseController {
@@ -19,6 +23,10 @@ public class BaseController {
     private PersonGenerator personGenerator;
     @Autowired
     private PersonService personService;
+    @Autowired
+    private Distributor distributor;
+
+    private int groupCount;
 
     // Вводится (inject) из application.properties.
     @Value("${welcome.message}")
@@ -31,13 +39,35 @@ public class BaseController {
     public String persons(Model model) {
         model.addAttribute("persons", personService.getAllPersons());
         model.addAttribute("generatorForm",new GeneratorForm());
+        model.addAttribute("distributorForm",new DistributorForm());
         return "persons";
     }
 
     @RequestMapping(value = { "/persons" }, method = RequestMethod.POST)
     public String generatePersons(Model model,@ModelAttribute("generatorForm") GeneratorForm generatorForm) {
+        personService.deleteAll();
         personGenerator.generate(generatorForm.getCount());
         return "redirect:/persons";
+    }
+
+    @RequestMapping(value = { "/persons" }, method = RequestMethod.PUT)
+    public String group(Model model,@ModelAttribute("distributorForm") DistributorForm distributorForm) {
+        groupCount = distributorForm.getGroupCount();
+
+        return "redirect:/result";
+    }
+
+    @RequestMapping(value = { "/result" }, method = RequestMethod.GET)
+    public String result(Model model) {
+        try {
+            List<Person> persons = personService.getAllPersons();
+            model.addAttribute("result", distributor.process(persons, groupCount));
+            model.addAttribute("average",(float) persons.stream().mapToInt(Person::getScore).sum() / persons.size());
+        }catch (Exception e) {
+            model.addAttribute("errorMessage", errorMessage);
+        }
+
+        return "result";
     }
 
     @RequestMapping(value = { "/persons/{id}" }, method = RequestMethod.POST)

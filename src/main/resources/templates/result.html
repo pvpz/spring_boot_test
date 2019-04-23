@@ -6,34 +6,27 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
 </head>
 <body>
-<h1>Person List</h1>
-<a th:href="@{/persons/0}">Add Person</a>
+<h1>Result</h1>
+<a th:href="@{/persons/}">Back</a>
+
 <br/><br/>
 <div>
-    <table border="1">
+    <table border="1" th:each ="group : ${result}">
         <tr>
             <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Score</th>
+            <th>Average</th>
         </tr>
-        <tr th:each ="person : ${persons}">
+        <tr th:each ="person : ${group.persons}">
             <td> <a th:href="@{/persons/{id}(id=${person.id})}"th:utext="${person.id}"></a></td>
             <td th:utext="${person.firstName}"></td>
             <td th:utext="${person.lastName}"></td>
             <td th:utext="${person.score}"></td>
+            <td th:utext="${group.average}"></td>
         </tr>
     </table>
-    <form th:action="@{/persons/}"
-          th:object="${generatorForm}" th:method="POST">
-        <input type="text" th:field="*{count}"/>
-        <input type="submit" value="Generate persons" />
-    </form>
-    <form th:action="@{/persons/}"
-          th:object="${distributorForm}" th:method="PUT">
-        <input type="text" th:field="*{groupCount}"/>
-        <input type="submit" value="Group"/>
-    </form>
 </div>
 <!-- Check if errorMessage is not null and not empty -->
 

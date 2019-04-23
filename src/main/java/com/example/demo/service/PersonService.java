@@ -15,4 +15,6 @@ public interface PersonService {
     public Person get(long id);
 
     public void save(Person person);
+
+    public void deleteAll();
 }

@@ -64,4 +64,14 @@ public class Person {
     public void setScore(int score) {
         this.score = score;
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", score=" + score +
+                '}';
+    }
 }
