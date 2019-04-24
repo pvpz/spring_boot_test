@@ -28,13 +28,6 @@ public class BaseController {
 
     private int groupCount;
 
-    // Вводится (inject) из application.properties.
-    @Value("${welcome.message}")
-    private String message;
-
-    @Value("${error.message}")
-    private String errorMessage;
-
     @RequestMapping(value = { "/persons" }, method = RequestMethod.GET)
     public String persons(Model model) {
         model.addAttribute("persons", personService.getAllPersons());
@@ -64,7 +57,7 @@ public class BaseController {
             model.addAttribute("result", distributor.process(persons, groupCount));
             model.addAttribute("average",(float) persons.stream().mapToInt(Person::getScore).sum() / persons.size());
         }catch (Exception e) {
-            model.addAttribute("errorMessage", errorMessage);
+            model.addAttribute("errorMessage", e.getMessage());
         }
 
         return "result";
@@ -89,7 +82,6 @@ public class BaseController {
             return "redirect:/persons";
         }
 
-        model.addAttribute("errorMessage", errorMessage);
         return "person";
     }
 
@@ -108,7 +100,7 @@ public class BaseController {
             personForm.setId(person.getId());
             model.addAttribute("personForm", personForm);
         }catch(Exception e){
-            model.addAttribute("errorMessage", errorMessage);
+            model.addAttribute("errorMessage", e.getMessage());
         }
         return "person";
     }
