@@ -38,8 +38,14 @@ public class BaseController {
 
     @RequestMapping(value = { "/persons" }, method = RequestMethod.POST)
     public String generatePersons(Model model,@ModelAttribute("generatorForm") GeneratorForm generatorForm) {
-        personService.deleteAll();
-        personGenerator.generate(generatorForm.getCount());
+        int count = generatorForm.getCount();
+        if (count > 0 && count < 1001) {
+            personService.deleteAll();
+            personGenerator.generate(generatorForm.getCount());
+        }else{
+            model.addAttribute("errorMessage", "Generate count should be > 0 and < 1001");
+            return "persons";
+        }
         return "redirect:/persons";
     }
 
