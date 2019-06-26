@@ -1,10 +1,13 @@
 package com.example.demo.form;
 
+import com.example.demo.model.Role;
+
 public class PersonForm {
     private String firstName;
     private String lastName;
     private long id;
     private int score;
+    private Role role;
 
     public String getFirstName() {
         return firstName;
@@ -36,5 +39,13 @@ public class PersonForm {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

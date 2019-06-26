@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Add Person</title>
+    <title>Add Role</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
 </head>
 <body>
-<h1>Person:</h1>
+<h1>Role:</h1>
 
 <!--
    In Thymeleaf the equivalent of
@@ -14,27 +14,18 @@
    would be @{/edit.html}
    -->
 
-<form th:action="@{/persons/{id}(id=${id})}"
-      th:object="${personForm}" method="POST">
+<form th:action="@{/roles/{id}(id=${id})}"
+      th:object="${roleForm}" method="POST">
     Id:
     <input type="text" th:field="*{id}" disabled/>
     <br/>
-    First Name:
-    <input type="text" th:field="*{firstName}" />
-    <br/>
-    Last Name:
-    <input type="text" th:field="*{lastName}" />
-    <br/>
-    Role:
-    <input type="text" th:field="*{role}" />
-    <br/>
-    Score:
-    <input type="text" th:field="*{score}" />
+    Name:
+    <input type="text" th:field="*{name}" />
     <br/>
     <input type="submit" value="Save" />
 </form>
-<form th:action="@{/persons/{id}(id=${id})}"
-      th:object="${personForm}" th:method="delete">
+<form th:action="@{/roles/{id}(id=${id})}"
+      th:object="${roleForm}" th:method="delete">
     <input type="submit" value="Delete" />
 </form>
 

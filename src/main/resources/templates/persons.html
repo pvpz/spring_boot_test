@@ -15,12 +15,14 @@
             <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Role</th>
             <th>Score</th>
         </tr>
         <tr th:each ="person : ${persons}">
             <td> <a th:href="@{/persons/{id}(id=${person.id})}"th:utext="${person.id}"></a></td>
             <td th:utext="${person.firstName}"></td>
             <td th:utext="${person.lastName}"></td>
+            <td th:utext="${person.role}"></td>
             <td th:utext="${person.score}"></td>
         </tr>
     </table>
@@ -35,6 +37,7 @@
         <input type="submit" value="Group"/>
     </form>
 </div>
+<a th:href="@{/roles}">Role List</a>
 <!-- Check if errorMessage is not null and not empty -->
 
 <div th:if="${errorMessage}" th:utext="${errorMessage}"

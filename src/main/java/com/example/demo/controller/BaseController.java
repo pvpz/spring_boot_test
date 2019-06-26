@@ -3,12 +3,16 @@ package com.example.demo.controller;
 import com.example.demo.form.DistributorForm;
 import com.example.demo.form.GeneratorForm;
 import com.example.demo.form.PersonForm;
+import com.example.demo.form.RoleForm;
 import com.example.demo.logics.Distributor;
 import com.example.demo.logics.PersonGenerator;
 import com.example.demo.model.Person;
-import com.example.demo.service.PersonService;
+import com.example.demo.model.Role;
+import com.example.demo.service.CommonService;
+import com.example.demo.service.PersonServiceImpl;
+import com.example.demo.service.RoleServiceImpl;
+import com.sun.xml.internal.fastinfoset.stax.events.Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +26,9 @@ public class BaseController {
     @Autowired
     private PersonGenerator personGenerator;
     @Autowired
-    private PersonService personService;
+    private PersonServiceImpl personService;
+    @Autowired
+    private RoleServiceImpl roleService;
     @Autowired
     private Distributor distributor;
 
@@ -30,7 +36,7 @@ public class BaseController {
 
     @RequestMapping(value = { "/persons" }, method = RequestMethod.GET)
     public String persons(Model model) {
-        model.addAttribute("persons", personService.getAllPersons());
+        model.addAttribute("persons", personService.getAll());
         model.addAttribute("generatorForm",new GeneratorForm());
         model.addAttribute("distributorForm",new DistributorForm());
         return "persons";
@@ -56,31 +62,18 @@ public class BaseController {
         return "redirect:/result";
     }
 
-    @RequestMapping(value = { "/result" }, method = RequestMethod.GET)
-    public String result(Model model) {
-        try {
-            List<Person> persons = personService.getAllPersons();
-            model.addAttribute("result", distributor.process(persons, groupCount));
-            model.addAttribute("average",(float) persons.stream().mapToInt(Person::getScore).sum() / persons.size());
-        }catch (Exception e) {
-            model.addAttribute("errorMessage", e.getMessage());
-        }
-
-        return "result";
-    }
-
     @RequestMapping(value = { "/persons/{id}" }, method = RequestMethod.POST)
     public String savePerson(Model model, @PathVariable("id") int id,
                              @ModelAttribute("personForm") PersonForm personForm) {
 
         String firstName = personForm.getFirstName();
         String lastName = personForm.getLastName();
+        Role role = personForm.getRole();
         int score = personForm.getScore();
 
-        if (firstName != null && firstName.length() > 0 //
-                && lastName != null && lastName.length() > 0) {
+        if (!Util.isEmptyString(firstName) && !Util.isEmptyString(lastName) && role != null) {
             if (id == 0) {
-                personService.add(new Person(firstName, lastName, score));
+                personService.add(new Person(firstName, lastName, score, role));
             }else if (id > 0){
                 personService.save(personService.get(id).withFirstName(firstName).withLastName(lastName));
             }
@@ -128,5 +121,86 @@ public class BaseController {
         model.addAttribute("errorMessage", error);
         return "person";
     }
+//////////////////////////////////////////////////////////////////////////////////////////////////
+    //ROLE
 
+
+    @RequestMapping(value = { "/roles" }, method = RequestMethod.GET)
+    public String roles(Model model) {
+        model.addAttribute("roles", roleService.getAll());
+        model.addAttribute("generatorForm",new GeneratorForm());
+        model.addAttribute("distributorForm",new DistributorForm());
+        return "roles";
+    }
+
+    @RequestMapping(value = { "/roles/{id}" }, method = RequestMethod.POST)
+    public String saveRole(Model model, @PathVariable("id") int id,
+                             @ModelAttribute("roleForm") RoleForm roleForm) {
+
+        String name = roleForm.getName();
+
+        if (!Util.isEmptyString(name)) {
+            if (id == 0) {
+                roleService.add(new Role(name));
+            }else if (id > 0){
+                roleService.save(roleService.get(id).withName(name));
+            }
+
+            return "redirect:/roles";
+        }
+
+        return "role";
+    }
+
+    @RequestMapping(value = { "/roles/{id}" }, method = RequestMethod.GET)
+    public String openRole(Model model, @PathVariable("id") int id) {
+        try {
+            Role role;
+            if (id != 0) {
+                role = roleService.get(id);
+            }else{
+                role = new Role();
+            }
+            RoleForm roleForm = new RoleForm();
+            roleForm.setName(role.getName());
+            roleForm.setId(role.getId());
+            model.addAttribute("roleForm", roleForm);
+        }catch(Exception e){
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+        return "role";
+    }
+
+    @RequestMapping(value = { "/roles/{id}" }, method = RequestMethod.DELETE)
+    public String deleteRole(Model model, @PathVariable("id") int id){
+        String error = "";
+        try {
+            if (id > 0) {
+                roleService.delete(roleService.get(id));
+                return "redirect:/roles";
+            } else {
+                error = "No role with this id " + id;
+            }
+        }catch (Exception e){
+            error = e.getMessage();
+        }
+
+        model.addAttribute("errorMessage", error);
+        return "person";
+    }
+
+    //RESULT
+
+    @RequestMapping(value = { "/result" }, method = RequestMethod.GET)
+    public String result(Model model) {
+        try {
+            List<Person> persons = personService.getAll();
+            model.addAttribute("result", distributor.process(persons, groupCount));
+            model.addAttribute("sum",(float) persons.stream().mapToInt(Person::getScore).sum() / persons.size());
+        }catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+
+        return "result";
+    }
 }

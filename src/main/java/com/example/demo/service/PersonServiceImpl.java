@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service("personService")
-public class PersonServiceImpl implements PersonService {
+public class PersonServiceImpl implements CommonService<Person> {
 
     @Autowired
     private PersonRepository personRepository;
 
     @Override
-    public List<Person> getAllPersons() {
+    public List<Person> getAll() {
         return personRepository.findAll();
     }
 

@@ -1,8 +1,6 @@
 package com.example.demo.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Person {
@@ -11,16 +9,19 @@ public class Person {
     private long id;
     private String firstName;
     private String lastName;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private Role role;
     private int score;
 
     public Person() {
 
     }
 
-    public Person(String firstName, String lastName, int score) {
+    public Person(String firstName, String lastName, int score, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.score = score;
+        this.role = role;
     }
 
     public String getFirstName() {
@@ -71,7 +72,16 @@ public class Person {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", score=" + score +
+                ", score=" + score + '\'' +
+                ", role=" + role +
                 '}';
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
