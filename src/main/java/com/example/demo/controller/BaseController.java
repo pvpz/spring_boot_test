@@ -8,10 +8,9 @@ import com.example.demo.logics.Distributor;
 import com.example.demo.logics.PersonGenerator;
 import com.example.demo.model.Person;
 import com.example.demo.model.Role;
-import com.example.demo.service.CommonService;
 import com.example.demo.service.PersonServiceImpl;
 import com.example.demo.service.RoleServiceImpl;
-import com.sun.xml.internal.fastinfoset.stax.events.Util;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,7 +70,7 @@ public class BaseController {
         Role role = personForm.getRole();
         int score = personForm.getScore();
 
-        if (!Util.isEmptyString(firstName) && !Util.isEmptyString(lastName) && role != null) {
+        if (!isEmptyString(firstName) && !isEmptyString(lastName) && role != null) {
             if (id == 0) {
                 personService.add(new Person(firstName, lastName, score, role));
             }else if (id > 0){
@@ -139,7 +138,7 @@ public class BaseController {
 
         String name = roleForm.getName();
 
-        if (!Util.isEmptyString(name)) {
+        if (!isEmptyString(name)) {
             if (id == 0) {
                 roleService.add(new Role(name));
             }else if (id > 0){
@@ -202,5 +201,9 @@ public class BaseController {
         }
 
         return "result";
+    }
+
+    public static boolean isEmptyString(String s) {
+        return s == null || s.equals("");
     }
 }
