@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//@Component
-public class GroupDistributorSv implements Distributor {
+@Component
+public class GroupDistributorSvNew implements Distributor {
 
     @Override
     public List<Group> process(List<Person> row, int groupCount) throws IOException {
@@ -33,22 +33,16 @@ public class GroupDistributorSv implements Distributor {
             result.add(new Group(new ArrayList<>()));
         }
         for (List<Person> personList : personLists) {
-            boolean reverse = false;
-            result.forEach(Group::calculateSum);
-            result.sort(Comparator.comparing(Group::getSum));
             int numbersInGroupMax = (int) Math.ceil((double)personList.size() / groupCount);
             for (int i = 0; i < numbersInGroupMax; i++) {
                 List<Person> currentList = moveCollectionElements(personList, groupCount);
-                if (reverse) {
-                    Collections.reverse(currentList);
-                }
-                reverse = !reverse;
                 for (int j = 0; j < currentList.size(); j++) {
                     result.get(j).getPersons().add(currentList.get(j));
                 }
+                result.forEach(Group::calculateSum);
+                result.sort(Comparator.comparing(Group::getSum));
             }
         }
-        result.forEach(Group::calculateSum);
         return result;
     }
 
