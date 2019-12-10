@@ -21,7 +21,7 @@ public class GroupDistributorSvNew implements Distributor {
         if (groupCount < 1) {
             throw new IOException("Group count must be not less then 1");
         }
-
+ 
         List<List<Person>> personLists = separatePersonsByRoles(row);
         sortByScore(personLists);
         if (DemoApplication.DEBUG){
